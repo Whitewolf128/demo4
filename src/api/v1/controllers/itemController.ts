@@ -110,3 +110,28 @@ export const deleteItem = async (
         next(error);
     }
 };
+
+// Export getItemsByIdController which retrieves an item by its ID and returns it in the response.
+export const getItemsByIdController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const items = await itemService.getItemsById(id);
+        if (items.length === 0) {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: "Item not found"
+            });
+            return;
+        }
+        res.status(HTTP_STATUS.OK).json({
+            message: "Item retrieved",
+            data: items[0]
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+

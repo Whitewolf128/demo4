@@ -6,6 +6,8 @@ import {
 } from "./api/v1/middleware/logger";
 import errorHandler from "./api/v1/middleware/errorHandler";
 import itemRoutes from "./api/v1/routes/itemRoutes";
+import userRoutes from "./api/v1/routes/userRoutes"; // Import user routes
+import adminRoutes from "./api/v1/routes/adminRoutes";
 
 const app = express();
 
@@ -24,6 +26,12 @@ app.use(express.json());
 
 // API Routes
 app.use("/api/v1", itemRoutes);
+
+// Mount the user routes under /users
+app.use("/api/v1/users", userRoutes);
+
+// Mount the admin routes under /admin
+app.use("/api/v1/admin", adminRoutes);
 
 // Global error handling middleware (MUST be applied last)
 app.use(errorHandler);

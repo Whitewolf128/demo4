@@ -128,3 +128,14 @@ export const deleteItem = async (id: string): Promise<void> => {
 
     await deleteDocument(COLLECTION, id);
 };
+
+export const getItemsById = async (id: string): Promise<Item[]> => {
+    const item = (await getAllItems()).find((i) => i.id === id);
+  if (!item) {
+    return [];
+  }
+
+  return [{
+    ...item
+  }];
+};
