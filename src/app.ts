@@ -1,52 +1,31 @@
-// import the express application and type definition
-import express, { Express } from "express";
-import morgan from "morgan";
-
+import express from "express";
+import {
+    accessLogger,
+    errorLogger,
+    consoleLogger,
+} from "./api/v1/middleware/logger";
+import errorHandler from "./api/v1/middleware/errorHandler";
 import itemRoutes from "./api/v1/routes/itemRoutes";
 
-// initialize the express application
-const app: Express = express();
+const app = express();
 
-// Interface for health check response
-// An interface in TypeScript defines the structure or "shape" of an object.
-interface HealthCheckResponse {
-    status: string;
-    uptime: number;
-    timestamp: string;
-    version: string;
+// Logging middleware (should be applied early in the middleware stack)
+if (process.env.NODE_ENV === "production") {
+    // In production, log to files
+    app.use(accessLogger);
+    app.use(errorLogger);
+} else {
+    // In development, log to console for immediate feedback
+    app.use(consoleLogger);
 }
-// Middleware START
-app.use(morgan("combined"));
 
-// Ensures incoming body is correctly parsed to JSON, otherwise req.body would be undefined
+// Body parsing middleware
 app.use(express.json());
 
-// Middleware END
+// API Routes
+app.use("/api/v1", itemRoutes);
 
-// respond to GET request at endpoint "/" with message
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
-
-/**
- * Health check endpoint that returns server status information
- * @returns JSON response with server health metrics
- */
-app.get("/api/v1/health", (req, res) => {
-    const healthData: HealthCheckResponse = {
-        status: "OK",
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString(),
-        version: "1.0.0",
-    };
-
-    res.json(healthData);
-});
-
-// Route Imports START
-// "/api/v1/items" will prefix all item routes
-app.use("/api/v1/items", itemRoutes);
-
-// Route Imports END
+// Global error handling middleware (MUST be applied last)
+app.use(errorHandler);
 
 export default app;
