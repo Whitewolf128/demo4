@@ -27,10 +27,4 @@ router.put(
 router.delete("/:id", authenticate, isAuthorized({ hasRole: ["admin", "manager"] }), itemController.deleteItem);
 router.get("/:id", authenticate, itemController.getItemsByIdController);
 
-router.get(
-    "/:id",
-    authenticate,
-    isAuthorized({ hasRole: ["admin"] }),
-    getUserDetails
-);
 export default router;

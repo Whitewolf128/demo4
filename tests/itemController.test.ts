@@ -4,6 +4,7 @@ import * as itemController from "../src/api/v1/controllers/itemController";
 import * as itemService from "../src/api/v1/services/itemService";
 import { Item } from "../src/api/v1/models/itemModel";
 import { mock } from "node:test";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 
 jest.mock("../src/api/v1/services/itemService");
 
@@ -17,8 +18,8 @@ describe("Item Controller", () => {
         jest.clearAllMocks();
         mockReq = { params: {}, body: {} };
         mockRes = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
+            status: jest.fn().mockReturnThis() as unknown as Response["status"],
+            json: jest.fn() as unknown as Response["json"],
         };
         mockNext = jest.fn();
     });

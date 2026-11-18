@@ -24,8 +24,21 @@ if (process.env.NODE_ENV === "production") {
 // Body parsing middleware
 app.use(express.json());
 
+app.get("/", (_req, res) => {
+    res.status(200).send("Hello World");
+});
+
+app.get("/api/v1/health", (_req, res) => {
+    res.status(200).json({
+        status: "OK",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        version: "1.0.0",
+    });
+});
+
 // API Routes
-app.use("/api/v1", itemRoutes);
+app.use("/api/v1/items", itemRoutes);
 
 // Mount the user routes under /users
 app.use("/api/v1/users", userRoutes);

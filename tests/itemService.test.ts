@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as itemService from "../src/api/v1/services/itemService";
 import * as firestoreRepository from "../src/api/v1/repositories/firestoreRepository";
 import { Item } from "../src/api/v1/models/itemModel";
@@ -22,7 +23,7 @@ describe("Item Service", () => {
         };
         const mockDocumentId: string = "test-item-id";
 
-        (firestoreRepository.createDocument as jest.Mock).mockResolvedValue(
+        jest.mocked(firestoreRepository.createDocument).mockResolvedValue(
             mockDocumentId
         );
 
@@ -59,9 +60,7 @@ describe("Item Service", () => {
         jest.spyOn(itemService, "getItemById").mockResolvedValue(mockItem);
 
         // jest.Mock replaces the auto-mocked version with our specific mocked implementation
-        (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
-            undefined
-        );
+        jest.mocked(firestoreRepository.deleteDocument).mockResolvedValue();
 
         // Act
         await itemService.deleteItem(mockDocumentId);
